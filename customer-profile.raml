@@ -1,0 +1,74 @@
+#%RAML 1.0
+title: customer-profile
+baseUri: http://examples.fabric360.io
+
+version: 0.0.1
+description: Example of Customer Profile API
+
+types:
+  Customer:
+    type: object
+    examples: | # example of Get A Customer profile
+        {
+          "customerId": "ddff12-bdjk",
+          "firstName": "Bob,
+          "lastName": "Jones"
+        }
+    properties:
+      customerId: string
+      firstName: string
+      lastName: string
+
+  Attribute:
+    type: object
+    properties:
+      sms: boolean
+      email: boolean
+
+/profile:
+  description: Endpoints to Customer profiles.
+  /{customerId}:
+    description: All Profile methods for a specific customer.
+    get: # HTTP method declaration
+      displayName: Get a Customer Profile for a given customer identity.
+      description: Get a Customer Profile for a given customer identity.
+      queryParameters:
+              customerId:
+                type: string
+                description: The id of the customer
+                required: true
+      responses: # declare a response
+        200: # HTTP status code
+          body: # declare content of response
+            application/json: # media type
+              type: Customer
+        404:
+        body:
+          application/json: # media type
+            type: object
+            properties:
+              errorCode: number
+              errorMessage: string
+            examples:
+              {
+                "errorCode": 3466,
+                "errorMessage": "Customer not found"
+              }
+
+    /preferences:
+      description: Get Customer Preferences
+      get:
+        description: Get a Preferences.
+        responses:
+          200:
+            body:
+              application/json:
+              type: object
+              properties:
+                email: boolean
+                sms: boolean
+              example: |   # example of Get A Customer preferences
+                {
+                  "email": false,
+                  "sms": true
+                }
